@@ -2,13 +2,33 @@ import cv2
 import numpy as np
 import matplotlib.pyplot as plt
 import pytesseract
-# from PIL import Image
+from PIL import Image
+from picamera import PiCamera
+from time import sleep
 
-# pytesseract.pytesseract.tesseract_cmd = '/usr/share/tesseract-ocr/4.00/tessdata/kor.traineddata'
+camera = PiCamera()
+
+camera.resolution = (2592, 1944)
+camera.framerate = 15
+
+camera.annotate_text_size = 50
+camera.annotate_text = " Hello world "
+
+camera.start_preview()
+# sleep(5)
+# camera.capture('/home/pi/image.png')
+# camera.stop_preview()
+
+for i in range(5):
+   sleep(5)
+   camera.capture('/home/pi/image%s.png' % i)
+camera.stop_preview()
+
+# pytesseract.pytesseract.tesseract_cmd = '/usr/share/tesseract-ocr/4.00/tessdata/kor.traineddata' //window only 
 
 # plt.style.use('dark_background')
 
-img_ori = cv2.imread('/home/pi/example6.png')
+img_ori = cv2.imread('/home/pi/example2.png')
 
 height, width, channel = img_ori.shape
 
@@ -280,7 +300,6 @@ for i, plate_img in enumerate(plate_imgs):
 
     if has_digit and len(result_chars) > longest_text:
         longest_idx = i
-        # // ----------
 
     plt.subplot(len(plate_imgs), 1, i+1)
     plt.imshow(img_result, cmap='gray')
