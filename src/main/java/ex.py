@@ -69,7 +69,7 @@ camera.stop_preview()
 
 # plt.style.use('dark_background')
 
-img_ori = cv2.imread('/home/pi/image.png')
+img_ori = cv2.imread('/home/pi/example2.png')
 
 height, width, channel = img_ori.shape
 
@@ -336,7 +336,7 @@ for i, plate_img in enumerate(plate_imgs):
                 has_digit = True
             result_chars += c
     
-    print(result_chars)
+    print("Car Number: ", result_chars)
     plate_chars.append(result_chars)
 
     if has_digit and len(result_chars) > longest_text:
