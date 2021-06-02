@@ -9,14 +9,19 @@ import time
  
 trig = 23
 echo = 24
- 
+servo = 18
+
 print('start')
  
 GPIO.setmode(GPIO.BCM)
 GPIO.setwarnings(False)
 GPIO.setup(trig,GPIO.OUT)
 GPIO.setup(echo,GPIO.IN)
+GPIO.setup(servo,GPIO.OUT)
  
+p = GPIO.PWM(servo, 50)
+p.start(0)
+
 try:
     while(True):
         GPIO.output(trig, False)
@@ -41,24 +46,28 @@ try:
 
         if distance <= 100:
             print('----- Car IN -----')
+            print('----- Door Open -----')
+            p.ChangeDutyCycle(7.5)
+            sleep(1)
+            p,stop()
             break
         else:
             print('----- NO Car -----')
 except:
     GPIO.cleanup()
 
-camera = PiCamera()
+# camera = PiCamera()
 
-camera.resolution = (2592, 1944)
-camera.framerate = 15
+# camera.resolution = (2592, 1944)
+# camera.framerate = 15
 
-camera.annotate_text_size = 50
-camera.annotate_text = " Hello world "
+# camera.annotate_text_size = 50
+# camera.annotate_text = " Hello world "
 
-camera.start_preview()
-sleep(5)
-camera.capture('/home/pi/image.png')
-camera.stop_preview()
+# camera.start_preview()
+# sleep(5)
+# camera.capture('/home/pi/image.png')
+# camera.stop_preview()
 
 # for i in range(5):
 #    sleep(5)
@@ -268,6 +277,8 @@ for i, matched_chars in enumerate(matched_result):
     rotation_matrix = cv2.getRotationMatrix2D(center=(plate_cx, plate_cy), angle=angle, scale=1.0)
     
     img_rotated = cv2.warpAffine(img_thresh, M=rotation_matrix, dsize=(width, height))
+
+    # plt.imshow(img_rotated, cmap='gray')
     
     img_cropped = cv2.getRectSubPix(
         img_rotated, 
@@ -285,7 +296,7 @@ for i, matched_chars in enumerate(matched_result):
         'w': int(plate_width),
         'h': int(plate_height)
     })
-    
+
     # plt.subplot(len(matched_result), 1, i+1)
     # plt.imshow(img_cropped, cmap='gray')
 
